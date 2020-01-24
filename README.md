@@ -2,7 +2,7 @@
 
 ![](https://pbs.twimg.com/media/DgqdsFCU8AATgCo.jpg)
 
-​		![](https://miro.medium.com/max/500/1*Fe6z8VdUS6laTd6Ev3EohQ.gif)
+​								![](https://miro.medium.com/max/500/1*Fe6z8VdUS6laTd6Ev3EohQ.gif)
 
 ## Androidで写真や動画を撮影するとリアルタイムで，任意の画風に変換するアプリケーションです[[1](https://www.youtube.com/watch?v=qXqoXhlq7BE#action=share),[2](<https://www.youtube.com/watch?v=TOCr52yLwSE>),[3](https://towardsdatascience.com/artistic-style-transfer-b7566a216431),[4](https://qiita.com/kidach1/items/0e7af5981e39955f33d6)]．
 
