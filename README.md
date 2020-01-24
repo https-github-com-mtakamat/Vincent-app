@@ -6,6 +6,8 @@
 
 ## Androidで写真や動画を撮影するとリアルタイムで，任意の画風に変換するアプリケーションです[[1](https://www.youtube.com/watch?v=qXqoXhlq7BE#action=share),[2](<https://www.youtube.com/watch?v=TOCr52yLwSE>),[3](https://towardsdatascience.com/artistic-style-transfer-b7566a216431),[4](https://qiita.com/kidach1/items/0e7af5981e39955f33d6)]．
 
+## いつまでに完成？　東京電機大学のオープンキャンパスがある6月の中ごろ
+
 タスクは，主に3つで構成されています．
 
 | タスクの概要 |                                                              |
