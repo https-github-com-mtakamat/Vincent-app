@@ -5,6 +5,35 @@ from scipy.optimize import fmin_l_bfgs_b
 from scipy.misc import imsave
 import time
 
+from keras.preprocessing.image import load_img, img_to_array
+
+# This is the path to the image you want to transform.
+target_image_path = ''
+# This is the path to the style image.
+style_reference_image_path = ''
+
+# Dimensions of the generated picture.
+width, height = load_img(target_image_path).size
+img_height = 400
+img_width = int(width * img_height / height)
+
+def preprocess_image(image_path):
+    img = load_img(image_path, target_size=(img_height, img_width))
+    img = img_to_array(img)
+    img = np.expand_dims(img, axis=0)
+    img = vgg19.preprocess_input(img)
+    return img
+
+def deprocess_image(x):
+    # Remove zero-center by mean pixel
+    x[:, :, 0] += 103.939
+    x[:, :, 1] += 116.779
+    x[:, :, 2] += 123.68
+    # 'BGR'->'RGB'
+    x = x[:, :, ::-1]
+    x = np.clip(x, 0, 255).astype('uint8')
+    return x
+
 target_image = K.constant(preprocess_image(target_image_path))
 style_reference_image = K.constant(preprocess_image(style_reference_image_path))
 
