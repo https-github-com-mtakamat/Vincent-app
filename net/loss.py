@@ -45,3 +45,33 @@ def total_variation_loss(x):
     b = K.square(
         x[:, :img_height - 1, :img_width - 1, :] - x[:, :img_height - 1, 1:, :])
     return K.sum(K.pow(a + b, 1.25))
+
+# Dict mapping layer names to activation tensors
+outputs_dict = dict([(layer.name, layer.output) for layer in model.layers])
+# Name of layer used for content loss
+content_layer = 'block5_conv2'
+# Name of layers used for style loss
+style_layers = ['block1_conv1',
+                'block2_conv1',
+                'block3_conv1',
+                'block4_conv1',
+                'block5_conv1']
+# Weights in the weighted average of the loss components
+total_variation_weight = 1e-4
+style_weight = 1.
+content_weight = 0.025
+
+# Define the loss by adding all components to a `loss` variable
+loss = K.variable(0.)
+layer_features = outputs_dict[content_layer]
+target_image_features = layer_features[0, :, :, :]
+combination_features = layer_features[2, :, :, :]
+loss += content_weight * content_loss(target_image_features,
+                                      combination_features)
+for layer_name in style_layers:
+    layer_features = outputs_dict[layer_name]
+    style_reference_features = layer_features[1, :, :, :]
+    combination_features = layer_features[2, :, :, :]
+    sl = style_loss(style_reference_features, combination_features)
+    loss += (style_weight / len(style_layers)) * sl
+loss += total_variation_weight * total_variation_loss(combination_image)
