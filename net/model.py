@@ -75,3 +75,35 @@ for layer_name in style_layers:
     sl = style_loss(style_reference_features, combination_features)
     loss += (style_weight / len(style_layers)) * sl
 loss += total_variation_weight * total_variation_loss(combination_image)
+
+# Get the gradients of the generated image wrt the loss
+grads = K.gradients(loss, combination_image)[0]
+
+# Function to fetch the values of the current loss and the current gradients
+fetch_loss_and_grads = K.function([combination_image], [loss, grads])
+
+
+class Evaluator(object):
+
+    def __init__(self):
+        self.loss_value = None
+        self.grads_values = None
+
+    def loss(self, x):
+        assert self.loss_value is None
+        x = x.reshape((1, img_height, img_width, 3))
+        outs = fetch_loss_and_grads([x])
+        loss_value = outs[0]
+        grad_values = outs[1].flatten().astype('float64')
+        self.loss_value = loss_value
+        self.grad_values = grad_values
+        return self.loss_value
+
+    def grads(self, x):
+        assert self.loss_value is not None
+        grad_values = np.copy(self.grad_values)
+        self.loss_value = None
+        self.grad_values = None
+        return grad_values
+
+evaluator = Evaluator()
