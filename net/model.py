@@ -1,6 +1,9 @@
 import numpy as np
 from keras.applications import vgg19
 from keras import backend as K
+from scipy.optimize import fmin_l_bfgs_b
+from scipy.misc import imsave
+import time
 
 target_image = K.constant(preprocess_image(target_image_path))
 style_reference_image = K.constant(preprocess_image(style_reference_image_path))
@@ -107,3 +110,47 @@ class Evaluator(object):
         return grad_values
 
 evaluator = Evaluator()
+
+from scipy.optimize import fmin_l_bfgs_b
+from scipy.misc import imsave
+import time
+
+result_prefix = 'style_transfer_result'
+iterations = 20
+
+x = preprocess_image(target_image_path)
+x = x.flatten()
+for i in range(iterations):
+    print('Start of iteration', i)
+    start_time = time.time()
+    x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x,
+                                     fprime=evaluator.grads, maxfun=20)
+    print('Current loss value:', min_val)
+    # Save current generated image
+    img = x.copy().reshape((img_height, img_width, 3))
+    img = deprocess_image(img)
+    fname = result_prefix + '_at_iteration_%d.png' % i
+    imsave(fname, img)
+    end_time = time.time()
+    print('Image saved as', fname)
+    print('Iteration %d completed in %ds' % (i, end_time - start_time))
+
+result_prefix = 'style_transfer_result'
+iterations = 20
+
+x = preprocess_image(target_image_path)
+x = x.flatten()
+for i in range(iterations):
+    print('Start of iteration', i)
+    start_time = time.time()
+    x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x,
+                                     fprime=evaluator.grads, maxfun=20)
+    print('Current loss value:', min_val)
+    # Save current generated image
+    img = x.copy().reshape((img_height, img_width, 3))
+    img = deprocess_image(img)
+    fname = result_prefix + '_at_iteration_%d.png' % i
+    imsave(fname, img)
+    end_time = time.time()
+    print('Image saved as', fname)
+    print('Iteration %d completed in %ds' % (i, end_time - start_time))
